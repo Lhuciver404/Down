@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Media Downloader</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .result {
+            margin-top: 20px;
+        }
+        .result p {
+            font-size: 14px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Media Downloader</h1>
+        <input type="text" id="urlInput" placeholder="Masukkan URL media (Facebook, TikTok, dll.)">
+        <button id="downloadBtn">Download</button>
+        <div class="result" id="resultContainer"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/nayan-media-downloader"></script>
+    <script>
+        document.getElementById('downloadBtn').addEventListener('click', async function() {
+            const url = document.getElementById('urlInput').value;
+            const resultContainer = document.getElementById('resultContainer');
+            
+            // Cek apakah input URL kosong
+            if (!url) {
+                resultContainer.innerHTML = '<p>URL tidak boleh kosong!</p>';
+                return;
+            }
+
+            try {
+                // Memanggil modul alldown dengan URL input
+                const { alldown } = require('nayan-media-downloader');
+                const data = await alldown(url);
+                
+                // Output hasil ke halaman
+                if (data.status) {
+                    resultContainer.innerHTML = `
+                        <p><strong>Judul Video:</strong> ${data.media.title}</p>
+                        <p><strong>Link Video Low:</strong> <a href="${data.media.low}" target="_blank">Download Low</a></p>
+                        <p><strong>Link Video High:</strong> <a href="${data.media.high}" target="_blank">Download High</a></p>
+                    `;
+                } else {
+                    resultContainer.innerHTML = '<p>Media tidak ditemukan!</p>';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                resultContainer.innerHTML = '<p>Terjadi kesalahan, cek URL anda.</p>';
+            }
+        });
+    </script>
+
+</body>
+</html>
